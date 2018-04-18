@@ -28,9 +28,18 @@ db.once('open', function() {
     
     var heroSchema = mongoose.Schema({
         _id: mongoose.Schema.Types.ObjectId,
-        id: Number,
-        name: String,
-        value: Number,
+        id: {
+            type: Number,
+            required: true
+        },
+        name: {
+            type: String,
+            required: true
+        },
+        value: {
+            type: String,
+            required: true
+        },
         range: Number,
         wheel: [{
             stats: {
@@ -100,7 +109,8 @@ router.get('/hero/delete', function(req, res) {
     res.status(200).send('way to go you just dropped the database')
 })
 router.get('/hero/:id', function(req, res) {
-    res.status(200).send('you got all the heroes. sincere congratulations, I dont think I could have done it without you :)')
+    
+    res.status(200).send(Hero.where('id', 1).lean())
 })
 router.put('/hero/:id', function(req, res) {
     res.status(200).send('Hello world')
