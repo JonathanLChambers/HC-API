@@ -51,27 +51,6 @@ db.once('open', function() {
     })
     Hero = mongoose.model('Hero', heroSchema)
 
-    /* blackWidow = new Hero({
-        name: "Black Widow",
-        value: 100,
-        range: 7,
-        wheel: [{
-            stats: {
-                attack: 1,
-                defense: 2,
-            },
-            skills: [2,3,1]
-        },
-        {
-            stats: {
-                attack: 4,
-                defense: 5,
-            },
-            skills: [1]
-        }]
-    })
- */
-
 })
 
 function handleError(res, reason, message, code) {
@@ -86,18 +65,8 @@ router.get('/hero', function(req, res) {
     })
 })
 router.post('/hero', function(req, res) {
-    //db.collection.dropIndexes();
     var someHero = new Hero(req.body)
     someHero._id = new mongoose.Types.ObjectId
-    /* var someHero = new Hero({
-        _id: new mongoose.Types.ObjectId,
-        id: req.body.id,
-        name: req.body.name,
-        value: req.body.value,
-        range: req.body.range,
-        wheel: req.body.wheel
-    }) */
-    //someHero._id = new mongoose.Types.ObjectId
     someHero.save(function (err, someHero){
         if(err) return console.error(err)
     })
@@ -109,12 +78,30 @@ router.get('/hero/delete', function(req, res) {
     res.status(200).send('way to go you just dropped the database')
 })
 router.get('/hero/:id', function(req, res) {
-    
-    res.status(200).send(Hero.where('id', 1).lean())
-})
-router.put('/hero/:id', function(req, res) {
-    res.status(200).send('Hello world')
+    Hero.findOne({'id': req.params.id}, function(err, hero){
+        if (err) {
+            handleError(res, err.message, "Failed to fetch Hero with id: " + req.params.id);
+        }else{
+            if(!hero){
+                res.status(400).send("failed to find hero with id: " + req.params.id)
+            }else{
+                res.status(201).send(hero)
+            }
+        }
+    })
 })
 router.delete('/hero/:id', function(req, res) {
+    Hero.deleteOne({'id': req.params.id}, function(err, hero){
+        /* if (err) {
+            handleError(res, err.message, "Failed to delete Hero with id: " + req.params.id);
+        }else{
+            if(!hero){
+                res.status(400).send("failed to find hero with id: " + req.params.id)
+            }
+        } */
+        res.end('thanks')
+    })
+})
+router.put('/hero/:id', function(req, res) {
     res.status(200).send('Hello world')
 })
