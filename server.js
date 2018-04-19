@@ -58,10 +58,15 @@ function handleError(res, reason, message, code) {
     res.status(code || 500).json({"error": message});
 }
 
+/*  "/api/hero"
+ *    GET: finds all heroes
+ *    POST: creates a new hero
+ *    Delete:drops whole database
+ */
 router.get('/hero', function(req, res) {
     Hero.find(function(err,heroes){
         if(err) return console.error(err)
-        res.status(200).send(heroes)
+        res.status(200).json(heroes)
     })
 })
 router.post('/hero', function(req, res) {
@@ -72,11 +77,16 @@ router.post('/hero', function(req, res) {
     })
     res.status(200).send('you did it big boy')
 })
-
-router.get('/hero/delete', function(req, res) {
+router.delete('/hero', function(req, res) {
     mongoose.connection.db.dropDatabase();
     res.status(200).send('way to go you just dropped the database')
 })
+
+/*  "/api/hero/:id"
+ *    GET: find hero by id
+ *    PUT: update hero by id
+ *    DELETE: deletes hero by id
+ */
 router.get('/hero/:id', function(req, res) {
     Hero.findOne({'id': req.params.id}, function(err, hero){
         if (err) {
@@ -85,23 +95,26 @@ router.get('/hero/:id', function(req, res) {
             if(!hero){
                 res.status(400).send("failed to find hero with id: " + req.params.id)
             }else{
-                res.status(201).send(hero)
+                res.status(201).json(hero)
             }
         }
     })
 })
 router.delete('/hero/:id', function(req, res) {
     Hero.deleteOne({'id': req.params.id}, function(err, hero){
-        /* if (err) {
+        if (err) {
             handleError(res, err.message, "Failed to delete Hero with id: " + req.params.id);
         }else{
-            if(!hero){
-                res.status(400).send("failed to find hero with id: " + req.params.id)
-            }
-        } */
-        res.end('thanks')
+            res.status(201).end("Successfully deleted Hero with id: " + req.params.id)
+        }
     })
 })
 router.put('/hero/:id', function(req, res) {
-    res.status(200).send('Hello world')
+    Hero.findOneAndUpdate({'id': req.params.id}, req.body, function(err, hero){
+        if (err) {
+            handleError(res, err.message, "Failed to update Hero with id: " + req.params.id);
+        }else{
+            res.status(201).end("Successfully updated Hero with id: " + req.params.id)
+        }
+    })
 })
