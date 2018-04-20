@@ -1,15 +1,41 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Hero } from '../hero';
+import { HeroService } from '../hero.service';
 
 @Component({
-  selector: 'app-hero-details',
+  selector: 'hero-details',
   templateUrl: './hero-details.component.html',
   styleUrls: ['./hero-details.component.css']
 })
-export class HeroDetailsComponent implements OnInit {
 
-  constructor() { }
+export class HeroDetailsComponent {
+  @Input()
+  hero: Hero;
 
-  ngOnInit() {
+  @Input()
+  createHandler: Function;
+  @Input()
+  updateHandler: Function;
+  @Input()
+  deleteHandler: Function;
+
+  constructor (private heroService: HeroService) {}
+
+  createHero(hero: Hero) {
+    this.heroService.createHero(hero).then((newHero: Hero) => {
+      this.createHandler(newHero);
+    });
   }
 
+  updateHero(hero: Hero): void {
+    this.heroService.updateHero(hero).then((updatedHero: Hero) => {
+      this.updateHandler(updatedHero);
+    });
+  }
+
+  deleteHero(heroId: String): void {
+    this.heroService.deleteHero(heroId).then((deletedHeroId: String) => {
+      this.deleteHandler(deletedHeroId);
+    });
+  }
 }

@@ -1,3 +1,29 @@
-<p>
-  hero-details works!
-</p>
+<div *ngIf="hero" class="row">
+  <div class="col-md-12">
+    <h2 *ngIf="hero._id">Hero Details</h2>
+    <h2 *ngIf="!hero._id">New Hero</h2>
+  </div>
+</div>
+<div *ngIf="hero" class="row">
+  <form class="col-md-12">
+    <div class="form-group">
+      <label for="hero-name">Name</label>
+      <input class="form-control" name="hero-name" [(ngModel)]="hero.name" placeholder="Name"/>
+    </div>
+    <div class="form-group">
+      <label for="hero-email">Email</label>
+      <input class="form-control" name="hero-email" [(ngModel)]="hero.email" placeholder="support@mlab.com"/>
+    </div>
+    <div class="form-group">
+      <label for="hero-phone-mobile">Mobile</label>
+      <input class="form-control" name="hero-phone-mobile" [(ngModel)]="hero.phone.mobile" placeholder="1234567890"/>
+    </div>
+    <div class="form-group">
+      <label for="hero-phone-work">Work</label>
+      <input class="form-control" name="hero-phone-work" [(ngModel)]="hero.phone.work" placeholder="0123456789"/>
+    </div>
+    <button class="btn btn-primary" *ngIf="!hero._id" (click)="createHero(hero)">Create</button>
+    <button class="btn btn-info" *ngIf="hero._id" (click)="updateHero(hero)">Update</button>
+    <button class="btn btn-danger" *ngIf="hero._id" (click)="deleteHero(hero._id)">Delete</button>
+  </form>
+</div>

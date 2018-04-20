@@ -12,6 +12,9 @@ var Hero
 app.use(bodyParser.json())
 app.use('/api', router)
 
+var distDir = __dirname + "/dist/"
+app.use(express.static(distDir))
+
 mongoose.connect('mongodb+srv://voidbunniez:Jc123456@heroclix-c5n8k.mongodb.net/test')
 db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'));

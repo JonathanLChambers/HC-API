@@ -1,3 +1,22 @@
-<p>
-  hero-list works!
-</p>
+<div class="row">
+  <div class="col-md-5">
+    <h2>Heros</h2>
+    <ul class="list-group">
+      <li class="list-group-item"
+        *ngFor="let hero of heroes"
+        (click)="selectHero(hero)"
+        [class.active]="hero === selectedHero">
+        {{hero.name}}
+      </li>
+    </ul>
+    <button class="btn btn-warning" (click)="createNewHero()">New</button>
+  </div>
+  <div class="col-md-5 col-md-offset-2">
+    <hero-details
+      [hero]="selectedHero"
+      [createHandler]="addHero"
+      [updateHandler]="updateHero"
+      [deleteHandler]="deleteHero">
+    </hero-details>
+  </div>
+</div>
